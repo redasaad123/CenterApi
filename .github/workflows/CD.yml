@@ -1,0 +1,36 @@
+name: Build and Deploy CenterApi to Azure App Service
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore ./WebApi/WebApi.csproj
+
+      - name: Build
+        run: dotnet build ./WebApi/WebApi.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish ./WebApi/WebApi.csproj --configuration Release --output ./publish_output
+
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "${{ secrets.AZURE_APP_NAME }}"   # أو اكتب center-api مباشرة
+          slot-name: production
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: ./publish_output
