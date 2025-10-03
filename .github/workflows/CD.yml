@@ -10,27 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # Setup .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
+      # Restore dependencies
       - name: Restore
-        run: dotnet restore ./WebApi/WebApi.csproj
+        run: dotnet restore CenterApi.sln
 
+      # Build
       - name: Build
-        run: dotnet build ./WebApi/WebApi.csproj --configuration Release --no-restore
+        run: dotnet build CenterApi.sln --configuration Release --no-restore
 
+      # Publish
       - name: Publish
         run: dotnet publish ./WebApi/WebApi.csproj --configuration Release --output ./publish_output
 
+      # Deploy to Azure
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "${{ secrets.AZURE_APP_NAME }}"   # أو اكتب center-api مباشرة
-          slot-name: production
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          app-name: Center-api
+          slot-name: Production
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C3E6A711C9AA489FB05CAB081B90E9BC }}
           package: ./publish_output
