@@ -28,7 +28,6 @@
     <Folder Include="wwwroot\Assignments\" />
     <Folder Include="wwwroot\Solve\" />
     <Folder Include="wwwroot\VideosMaterails\" />
-    <Folder Include="wwwroot\PdfMaterails\" />
   </ItemGroup>
 
 </Project>
