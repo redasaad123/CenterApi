@@ -29,17 +29,10 @@ jobs:
       - name: Build
         run: dotnet build CenterApi.sln --configuration Release --no-restore
 
-      # Publish
-      - name: Publish
-        run: dotnet publish ./WebApi/WebApi.csproj --configuration Release --output ./publish_output
-
+      
       # Build Docker image
       - name: Build Docker image
         run: docker build -t centerapi-image .
-
-      # Run Docker container
-      - name: Run Docker container
-        run: docker run -d -p 9090:8080 --name centerapi-container centerapi-image
 
       # Push Docker image to Docker Hub (optional)
       - name: Log in to Docker Hub
