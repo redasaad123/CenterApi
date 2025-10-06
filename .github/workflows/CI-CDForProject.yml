@@ -7,7 +7,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     env:
       TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_tenant_id:       ${{ secrets.AZURE_TENANT_ID }}
@@ -29,6 +29,12 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: ./Terraform
+
+      - name: Generate SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -q -N ""
+
 
       # Validate Terraform configuration
       - name: Terraform Validate
