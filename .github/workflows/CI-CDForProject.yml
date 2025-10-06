@@ -1,0 +1,63 @@
+name: CI/CD for Terraform Project
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./Terraform
+
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./Terraform
+
+      # Plan Terraform deployment
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./Terraform
+
+      # Apply Terraform deployment
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/master'
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./Terraform
+
+      # # Optional: Show Terraform output
+      # - name: Terraform Output
+      #   run: terraform output
+
+      #   working-directory: ./Terraform
+
+
+      # Export IP Address
+
+      - name: export IpAddress
+        run: echo "IP_ADDRESS=$(terraform output -raw ip_address)" >> $GITHUB_ENV
+        working-directory: ./Terraform
+
+
+      # Display the exported IP address
+      - name: Display IP Address
+        run: echo "The IP Address is $IP_ADDRESS"
+
+
+
+
