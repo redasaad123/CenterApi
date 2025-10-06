@@ -13,7 +13,11 @@ terraform {
     storage_account_name  = "redastorageaccnt1234"
     container_name        = "content"
     key                   = "terraform.tfstate"
+
+    use_cli = false
   }
+
+   
 }
 
 
