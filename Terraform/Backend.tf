@@ -14,7 +14,7 @@ terraform {
     container_name        = "content"
     key                   = "terraform.tfstate"
 
-    use_cli = false
+    
   }
 
    
