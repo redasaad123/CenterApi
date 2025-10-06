@@ -9,7 +9,7 @@ provider "azurerm" {
 }
 
 data "azurerm_resource_group" "rg" {
-    name = var.rg.name
+    name = "Reda"
 }
 
 resource "azurerm_virtual_network" "vnet" {
