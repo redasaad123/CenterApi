@@ -1,10 +1,10 @@
 provider "azurerm" {
   features {}
 
-    subscription_id = var.config.subscription_id
-    tenant_id       = var.config.tenant_id
-    client_id       = var.config.client_id
-    client_secret   = var.config.client_secret
+    subscription_id = var.subscription_id
+  tenant_id       = var.tenant_id
+  client_id       = var.client_id
+  client_secret   = var.client_secret
     
 }
 
