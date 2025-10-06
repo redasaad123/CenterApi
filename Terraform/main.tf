@@ -9,14 +9,7 @@ provider "azurerm" {
     
 }
 
-# terraform {
-#     backend "azurerm" {
-#         resource_group_name  = "Reda"
-#         storage_account_name  = "redastorageaccnt1234"
-#         container_name        = "content"
-#         key                   = "terraform.tfstate"
-#     }
-# }
+
 
 data "azurerm_resource_group" "rg" {
     name = "Reda"
