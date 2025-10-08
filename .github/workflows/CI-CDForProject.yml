@@ -73,20 +73,7 @@ jobs:
         run: terraform apply -auto-approve tfplan
         working-directory: ./Terraform
 
-      # # Optional: Show Terraform output
-      # - name: Terraform Output
-      #   run: terraform output
-
-      #   working-directory: ./Terraform
-
-
       # Export IP Address
-
-      - name: export IpAddress
-        run: echo "public_ip=$(terraform output -raw public_ip)" >> $GITHUB_ENV
-        working-directory: ./Terraform
-
-
 
       - name: Get public IP
         id: get_ip
