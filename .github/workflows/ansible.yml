@@ -9,7 +9,6 @@ on:
         description: 'Server Public IP'
         required: true
         type: string
-
 jobs:
   ansible:
     runs-on: ubuntu-latest
