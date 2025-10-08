@@ -15,6 +15,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
 
+      TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
       TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       TF_VAR_tenant_id:       ${{ secrets.TENANT_ID }}
       TF_VAR_client_id:       ${{ secrets.CLIENT_ID }}
@@ -48,11 +49,13 @@ jobs:
         run: terraform init
         working-directory: ./Terraform
 
-      - name: Generate SSH Key
+      - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh
-          ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -q -N ""
-
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa
+          chmod 644 ~/.ssh/id_rsa.pub
 
       # Validate Terraform configuration
       - name: Terraform Validate

@@ -18,3 +18,6 @@ variable "client_secret" {
   description = "Azure Client Secret"
   sensitive   = true
 }
+
+variable "ssh_public_key" {}
+
