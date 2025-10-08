@@ -75,10 +75,10 @@ jobs:
 
       # Export IP Address
 
-      - name: Get public IP
+      - name: Get Public IP
         id: get_ip
         run: |
-          IP=$(terraform output -raw public_ip | tr -d '\r\n')
+          IP=$(terraform output -json public_ip | jq -r '.')
           echo "ip=$IP" >> $GITHUB_OUTPUT
         working-directory: ./Terraform
 
