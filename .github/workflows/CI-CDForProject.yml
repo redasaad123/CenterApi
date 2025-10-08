@@ -85,7 +85,7 @@ jobs:
       - name: Get public IP
         id: get_ip
         run: |
-          IP=$(terraform output -raw public_ip)
+          IP=$(terraform output -raw public_ip | head -n1)
           echo "ip=$IP"
         working-directory: ./Terraform
 
