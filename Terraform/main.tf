@@ -100,47 +100,47 @@ resource "azurerm_public_ip" "public_ip" {
     allocation_method   = "Static"
 
 }
-# resource "azurerm_linux_virtual_machine" "vm" {
-#   name                = "CenterVM"
-#   resource_group_name = data.azurerm_resource_group.rg.name
-#   location            = data.azurerm_resource_group.rg.location
-#   size                = "Standard_B1s"
-#   admin_username      = "adminuser"
-#   network_interface_ids = [
-#     azurerm_network_interface.nic.id,
-#   ]
+resource "azurerm_linux_virtual_machine" "vm" {
+  name                = "CenterVM"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.rg.location
+  size                = "Standard_B1s"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.nic.id,
+  ]
 
-#   admin_ssh_key {
-#     username   = "adminuser"
-#     public_key = var.ssh_public_key
-#   }
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = var.ssh_public_key
+  }
 
-#   os_disk {
-#     caching              = "ReadWrite"
-#     storage_account_type = "Standard_LRS"
-#   }
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
 
-#   source_image_reference {
-#     publisher = "Canonical"
-#     offer     = "UbuntuServer"
-#     sku       = "18.04-LTS"
-#     version   = "latest"
-#   }
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
 
-#   lifecycle {
-#     ignore_changes = [
-#       admin_ssh_key,
-#     ]
-#   }
+  lifecycle {
+    ignore_changes = [
+      admin_ssh_key,
+    ]
+  }
 
   
-# }
+}
 
 
 
 
-# output "public_ip" {
-#   value = azurerm_public_ip.public_ip.ip_address
-# }
+output "public_ip" {
+  value = azurerm_public_ip.public_ip.ip_address
+}
 
 
