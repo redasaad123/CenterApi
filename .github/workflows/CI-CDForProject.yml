@@ -82,15 +82,17 @@ jobs:
 
       # Export IP Address
 
-      - name: Get public IP
-        id: get_ip
-        run: |
-          IP=$(terraform output -raw public_ip | head -n1)
-          echo "ip=$IP"
-        working-directory: ./Terraform
+      - name: Terraform Output
+        id: tf_output
+        uses: hashicorp/terraform-github-actions@v2
+        with:
+          command: output
+          path: ./Terraform
+          args: -raw public_ip
+
 
       - name: Show IP
-        run: echo "Public IP is ${{ steps.get_ip.outputs.ip }}"
+        run: echo "Public IP is ${{ steps.tf_output.outputs.ip }}"
 
 
     
