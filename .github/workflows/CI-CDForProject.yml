@@ -99,7 +99,7 @@ jobs:
           echo "💾 IP saved to server_ip.txt"
       
       - name: Upload IP as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: server-ip
           path: server_ip.txt
