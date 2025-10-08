@@ -129,6 +129,21 @@ resource "azurerm_linux_virtual_machine" "vm" {
   
 }
 
+resource "azurerm_virtual_machine_extension" "add_new_ssh_key" {
+  name                 = "AddNewSSHKey"
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.1"
+
+  settings = <<SETTINGS
+    {
+      "commandToExecute": "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxLMM4loasoei2nmVu5YnFqYW7mcNypzseGO01VVTCy+QP9351H4sE3bbCPrgtLUSw1CuoMBVA76YYCBztknuBt8CvTutiTDOc10Hm/zyTzRlJYfVdjTWmXtgPk4ZbZxz0d4J5X7t8jANGXxxXV4CCz35ITavG5vPeVJ5feD/meGzHXqfeWixH8NZdAeQujmqLcIEUoSFHbvTIZRyorD/84AdQkY/Vl/gBkIdOxHn43oXwXXgYj09jDcwIumkdtxykvBUNvCijCB6WfAvTLX7j+2PbDMBvLEIv33FEYJRG3MLq+iTODEMByM6PySWUlV/fKA2wrC2QVSa/ST3t4+Zx newkey@terra' >> /home/adminuser/.ssh/authorized_keys"
+    }
+  SETTINGS
+}
+
+
 
 output "public_ip" {
   value = azurerm_public_ip.public_ip.ip_address

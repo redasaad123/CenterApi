@@ -80,14 +80,16 @@ jobs:
       # Export IP Address
 
       - name: export IpAddress
-        run: echo "IP_ADDRESS=$(terraform output -raw public_ip)" >> $GITHUB_ENV
+        run: echo "public_ip=$(terraform output -raw public_ip)" >> $GITHUB_ENV
         working-directory: ./Terraform
 
 
 
       # Display the exported IP address
       - name: Display IP Address
-        run: echo "The IP Address is $IP_ADDRESS"
+        run: echo "The IP Address is ${{ env.public_ip }}"
+    
+
 
 
 
