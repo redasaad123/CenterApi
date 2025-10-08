@@ -85,9 +85,13 @@ jobs:
 
 
 
-      # Display the exported IP address
-      - name: Display IP Address
-        run: echo "The IP Address is ${{ env.public_ip }}"
+      - name: Get public IP
+        id: get_ip
+        run: echo "ip=$(terraform output -raw public_ip)" >> $GITHUB_OUTPUT
+
+      - name: Show IP
+        run: echo "Public IP is ${{ steps.get_ip.outputs.ip }}"
+
     
 
 
