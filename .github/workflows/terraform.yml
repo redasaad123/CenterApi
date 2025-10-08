@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  terraform:
     runs-on: ubuntu-latest
 
     env:
@@ -93,13 +93,23 @@ jobs:
           echo "🔗 You can access your server at: http://${{ steps.get_ip.outputs.public_ip }}"
       
       # خطوة اختيارية: حفظ الـ IP في ملف
-      - name: Save IP to file
+      - name: Save Public IP to file
         run: |
-          echo "${{ steps.get_ip.outputs.public_ip }}" > server_ip.txt
-          echo "💾 IP saved to server_ip.txt"
+          mkdir -p ./outputs
+          echo "${{ steps.get_ip.outputs.public_ip }}" > ./outputs/server_ip.txt
+          echo "Server deployed at: ${{ steps.get_ip.outputs.public_ip }}" > ./outputs/info.txt
+
       
-      - name: Upload IP as artifact
+      - name: Upload server info artifact
         uses: actions/upload-artifact@v4
         with:
-          name: server-ip
-          path: server_ip.txt
+          name: server-info
+          path: ./outputs/
+
+
+      - name: Trigger Ansible Workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: terraform-completed
+          client-payload: '{"public_ip": "${{ steps.get_ip.outputs.public_ip }}"}'
