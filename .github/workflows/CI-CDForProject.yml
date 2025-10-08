@@ -88,15 +88,16 @@ jobs:
 
 
 
-      - name: export IpAddress
+      - name: Get public IP
+        id: get_ip
         run: |
           IP=$(terraform output -raw public_ip | tr -d '\r\n')
-          echo "public_ip=$IP" >> $GITHUB_ENV
+          echo "ip=$IP" >> $GITHUB_OUTPUT
         working-directory: ./Terraform
-
 
       - name: Show IP
         run: echo "Public IP is ${{ steps.get_ip.outputs.ip }}"
+
 
     
 
