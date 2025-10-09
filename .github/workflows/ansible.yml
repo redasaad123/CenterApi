@@ -58,14 +58,22 @@ jobs:
 
       - name: Ensure Python 3.12 is installed on remote
         run: |
-          echo "📦 Ensuring Python 3.12 on remote server..."
+          echo "📦 Installing Python 3.12 on remote server..."
           ssh -o StrictHostKeyChecking=no adminuser@${{ steps.get_ip.outputs.public_ip }} '
             set -e
-            if ! command -v python3.12 >/dev/null 2>&1; then
-              sudo apt-get update -y &&
-              sudo apt-get install -y python3 python3-pip python3-venv
-            fi
-            sudo ln -sf /usr/bin/python3.12 /usr/bin/python3
+            
+            # إضافة PPA لـ Python 3.12
+            sudo apt-get update -y
+            sudo apt-get install -y software-properties-common
+            sudo add-apt-repository -y ppa:deadsnakes/ppa
+            sudo apt-get update -y
+            
+            # تثبيت Python 3.12
+            sudo apt-get install -y python3.12 python3.12-venv python3.12-dev
+            
+            # إنشاء رابط
+            sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
+            
             python3 --version
           '
 
