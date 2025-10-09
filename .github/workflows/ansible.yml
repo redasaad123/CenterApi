@@ -69,10 +69,6 @@ jobs:
             python3 --version
           '
 
-          
-
-
-
       - name: Create Ansible Inventory
         run: |
           mkdir -p ./ansible
@@ -80,6 +76,7 @@ jobs:
           [webservers]
           server ansible_host=${{ steps.get_ip.outputs.public_ip }} ansible_user=adminuser ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_python_interpreter=/usr/bin/python3
           EOF
+          cat ./ansible/inventory.ini
           echo "📝 Inventory created"
 
 
