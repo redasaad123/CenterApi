@@ -4,23 +4,29 @@
   gather_facts: no
   become: yes
   tasks:
-    - name: Update apt cache
+    - name: Update package cache
       raw: apt-get update -y
-      changed_when: false
+      register: apt_update
+      failed_when: apt_update.rc != 0
 
-    - name: Install Python packages
-      raw: apt-get install -y python3 python3-apt python3-minimal
-      changed_when: false
+    - name: Install Python3 and dependencies
+      raw: |
+        set -e
+        apt-get install -y python3 python3-apt python3-minimal
+        ls -la /usr/bin/python3
+        /usr/bin/python3 --version
+      register: install_result
+      failed_when: install_result.rc != 0
 
-- name: Verify Python and gather facts
+    - name: Display installation output
+      debug:
+        var: install_result
+
+- name: Continue with setup
   hosts: all
   become: yes
   gather_facts: yes
   vars:
     ansible_python_interpreter: /usr/bin/python3
-
-- name: Setup Application
-  hosts: all
-  become: yes
   roles:
     - Roles
