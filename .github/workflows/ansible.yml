@@ -56,11 +56,13 @@ jobs:
           echo "❌ SSH connection timeout"
           exit 1
 
-      - name: Ensure Python is installed
+      - name: Ensure Python 3 is available on remote (Ubuntu 24.04)
         run: |
-          sudo apt-get update -y &&
-          sudo apt-get install -y python3.9 &&
-          sudo ln -sf /usr/bin/python3.9 /usr/bin/python3
+            sudo apt-get update -y &&
+            sudo apt-get install -y python3 python3-venv python3-pip &&
+            sudo ln -sf /usr/bin/python3 /usr/bin/python
+          
+
 
 
       - name: Create Ansible Inventory
@@ -68,9 +70,10 @@ jobs:
           mkdir -p ./ansible
           cat > ./ansible/inventory.ini << EOF
           [webservers]
-          server ansible_host=${{ steps.get_ip.outputs.public_ip }} ansible_user=adminuser ansible_ssh_private_key_file=~/.ssh/id_rsa
+          server ansible_host=${{ steps.get_ip.outputs.public_ip }} ansible_user=adminuser ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_python_interpreter=/usr/bin/python3
           EOF
           echo "📝 Inventory created"
+
 
       - name: Test Ansible Connection
         run: |
