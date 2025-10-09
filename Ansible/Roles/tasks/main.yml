@@ -1,4 +1,9 @@
 ---
 # install Python
-- name: Install Python 3.10 and set as default
-  import_tasks: templatesTasks/install-Python.yml
+# - name: Install Python 3.10 and set as default
+#   import_tasks: templatesTasks/install-Python.yml
+
+
+# setup nginx
+- name: Setup Nginx on VM
+  import_tasks: templatesTasks/nginx-setup.yml
