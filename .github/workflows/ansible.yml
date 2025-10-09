@@ -55,56 +55,26 @@ jobs:
           done
           echo "❌ SSH connection timeout"
           exit 1
-
-      - name: Ensure Python 3 is installed on remote
-        run: |
-          echo "📦 Installing Python 3 on remote server..."
-          ssh -o StrictHostKeyChecking=no adminuser@${{ steps.get_ip.outputs.public_ip }} 'bash -s' << 'ENDSSH'
-            #!/bin/bash
-            
-            # إصلاح مشكلة cnf-update-db
-            echo "🔧 Fixing apt configuration..."
-            sudo rm -f /etc/apt/apt.conf.d/50command-not-found
-            
-            # تحديث النظام
-            echo "📦 Updating package list..."
-            sudo apt-get update -y
-            
-            # تثبيت Python 3 الافتراضي (3.6 في Ubuntu 18.04)
-            echo "🐍 Installing Python 3..."
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-              python3 \
-              python3-pip \
-              python3-venv \
-              python3-apt
-            
-            # التحقق من التثبيت
-            echo "✅ Verifying installation..."
-            python3 --version
-            
-            echo "🎉 Python 3 installed successfully!"
-          ENDSSH
-
-
-      
+          
       - name: Create Ansible Inventory
         run: |
-          mkdir -p ./ansible
-          cat > ./ansible/inventory.ini << EOF
+          cat > ./Ansible/inventory.ini << EOF
           [webservers]
           server ansible_host=${{ steps.get_ip.outputs.public_ip }} ansible_user=adminuser ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_python_interpreter=/usr/bin/python3
           EOF
-          cat ./ansible/inventory.ini
+          cat ./Ansible/inventory.ini
           echo "📝 Inventory created"
+      
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i ./Ansible/inventory.ini ./Ansible/playbook.yml
 
 
       - name: Test Ansible Connection
         run: |
-          ansible -i ./ansible/inventory.ini webservers -m ping
+          ansible -i ./Ansible/inventory.ini webservers -m ping
 
-      - name: Run Ansible Playbook
-        run: |
-          ansible-playbook -i ./ansible/inventory.ini ./ansible/playbook.yml
+      
 
       - name: Configuration Complete
         run: |
