@@ -2,17 +2,20 @@
 ---
 # tasks file for Roles
 
+
+
 - name: Update and upgrade apt packages
   apt:
     update_cache: yes
     upgrade: dist
   tags: update
 
-- name: Install required packages
-  raw: |
-      test -e /usr/bin/python3 || (apt -y install python3-minimal) \
-      (apt-get update -y && apt-get install -y python3 python3-apt)
-  changed_when: false
-    
+- name: Install additional required packages
+  apt:
+    name:
+      - python3
+      - python3-apt
+    state: present
+    update_cache: yes
 
 
