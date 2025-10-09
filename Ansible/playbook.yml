@@ -1,55 +1,49 @@
 ---
 - name: Upgrade Python to compatible version
-  hosts: all
-  gather_facts: no
+  hosts: server
   become: yes
   tasks:
+
+    - name: Ensure dependencies for adding PPA
+      ansible.builtin.apt:
+        name: software-properties-common
+        state: present
+        update_cache: yes
+
     - name: Add deadsnakes PPA for newer Python
-      raw: |
-        apt-get update
-        apt-get install -y software-properties-common
-        add-apt-repository -y ppa:deadsnakes/ppa
-        apt-get update
-      changed_when: true
+      ansible.builtin.apt_repository:
+        repo: ppa:deadsnakes/ppa
+        state: present
 
-    - name: Install Python 3.10 and dependencies
-      raw: |
-        apt-get install -y python3.10 python3.10-distutils python3.10-venv python3.10-dev
-      changed_when: true
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
 
-    - name: Force update Python3 symlink
-      raw: |
-        rm -f /usr/bin/python3
-        ln -sf /usr/bin/python3.10 /usr/bin/python3
-        ls -la /usr/bin/python3
-        /usr/bin/python3 --version
-      register: link_result
-      changed_when: true
+    - name: Install Python 3.10 minimal if not already installed
+      ansible.builtin.apt:
+        name: python3.10-minimal
+        state: present
 
-    - name: Show symlink result
-      debug:
-        var: link_result.stdout_lines
+    - name: Install optional Python 3.10 packages if available
+      ansible.builtin.apt:
+        name:
+          - python3.10
+          - python3.10-distutils
+          - python3.10-venv
+          - python3.10-dev
+        state: present
+        install_recommends: yes
+      ignore_errors: yes   # يسمح باستمرار التشغيل حتى لو بعض الحزم غير موجودة
 
-    - name: Install pip for Python 3.10
-      raw: |
-        curl -sS https://bootstrap.pypa.io/get-pip.py | /usr/bin/python3.10
-        /usr/bin/python3 -m pip install --upgrade pip setuptools
-      changed_when: true
+    - name: Ensure python3 points to python3.10
+      ansible.builtin.command: update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
+      args:
+        creates: /usr/bin/python3
 
-    - name: Final verification
-      raw: /usr/bin/python3 --version && /usr/bin/python3 -c "import sys; print(sys.version)"
-      register: final_check
-      changed_when: false
+    - name: Verify Python version
+      ansible.builtin.command: python3 --version
+      register: python_version
 
-    - name: Show final Python info
-      debug:
-        var: final_check.stdout_lines
-
-- name: Setup Application
-  hosts: all
-  become: yes
-  gather_facts: yes
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
-  roles:
-    - Roles
+    - name: Show installed Python version
+      ansible.builtin.debug:
+        msg: "Installed Python version is {{ python_version.stdout }}"
