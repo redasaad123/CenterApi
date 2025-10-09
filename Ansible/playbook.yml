@@ -4,27 +4,23 @@
   gather_facts: no
   become: yes
   tasks:
-    - name: Check if Python3 exists
-      raw: which python3
-      register: python_exists
-      ignore_errors: yes
+    - name: Update apt cache
+      raw: apt-get update -y
       changed_when: false
 
-    - name: Install Python 3 if not found
-      raw: |
-        apt-get update
-        apt-get install -y python3 python3-apt python3-pip
-      when: python_exists.rc != 0
-
-    - name: Ensure Python3 is available
-      raw: python3 --version
+    - name: Install Python packages
+      raw: apt-get install -y python3 python3-apt python3-minimal
       changed_when: false
 
-- name: Setup Application
+- name: Verify Python and gather facts
   hosts: all
   become: yes
   gather_facts: yes
   vars:
     ansible_python_interpreter: /usr/bin/python3
+
+- name: Setup Application
+  hosts: all
+  become: yes
   roles:
     - Roles
