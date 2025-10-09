@@ -56,6 +56,12 @@ jobs:
           echo "❌ SSH connection timeout"
           exit 1
 
+      - name: Ensure Python is installed
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3
+
+          
       - name: Create Ansible Inventory
         run: |
           mkdir -p ./ansible
