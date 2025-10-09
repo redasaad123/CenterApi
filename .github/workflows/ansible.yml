@@ -59,24 +59,60 @@ jobs:
       - name: Ensure Python 3.12 is installed on remote
         run: |
           echo "📦 Installing Python 3.12 on remote server..."
-          ssh -o StrictHostKeyChecking=no adminuser@${{ steps.get_ip.outputs.public_ip }} '
-            set -e
-            
-            # إضافة PPA لـ Python 3.12
-            sudo apt-get update -y
-            sudo apt-get install -y software-properties-common
-            sudo add-apt-repository -y ppa:deadsnakes/ppa
-            sudo apt-get update -y
-            
-            # تثبيت Python 3.12
-            sudo apt-get install -y python3.12 python3.12-venv python3.12-dev
-            
-            # إنشاء رابط
-            sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
-            
-            python3 --version
-          '
+          ssh -o StrictHostKeyChecking=no adminuser@${{ steps.get_ip.outputs.public_ip }} 'bash -s' << 'ENDSSH'
+            #!/bin/bash
 
+            # دالة لطباعة الأخطاء
+            error_exit() {
+              echo "❌ Error: $1"
+              exit 1
+            }
+
+            # إصلاح مشكلة cnf-update-db
+            echo "🔧 Fixing apt configuration..."
+            sudo rm -f /etc/apt/apt.conf.d/50command-not-found
+
+            # تحديث النظام
+          error_exit() {
+            echo "❌ Error: $1"
+            exit 1
+          }
+          
+          # إصلاح مشكلة cnf-update-db
+          echo "🔧 Fixing apt configuration..."
+          sudo rm -f /etc/apt/apt.conf.d/50command-not-found
+          
+          # تحديث النظام
+          echo "📦 Updating package list..."
+          sudo apt-get update -y || error_exit "Failed to update package list"
+          
+          # تثبيت الأدوات المطلوبة
+          echo "📦 Installing software-properties-common..."
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common || error_exit "Failed to install software-properties-common"
+          
+          # إضافة PPA
+          echo "➕ Adding deadsnakes PPA..."
+          sudo add-apt-repository -y ppa:deadsnakes/ppa || error_exit "Failed to add PPA"
+          sudo apt-get update -y || error_exit "Failed to update after adding PPA"
+          
+          # تثبيت Python 3.12
+          echo "🐍 Installing Python 3.12..."
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            python3.12 \
+            python3.12-venv \
+            python3.12-dev \
+            python3-apt || error_exit "Failed to install Python 3.12"
+          
+          # إنشاء رابط
+          echo "🔗 Setting Python 3.12 as default..."
+          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 || error_exit "Failed to set Python alternative"
+          
+          # التحقق من التثبيت
+          echo "✅ Verifying installation..."
+          python3 --version || error_exit "Python 3.12 not found"
+          
+          echo "🎉 Python 3.12 installed successfully!"
+          ENDSSH
       - name: Create Ansible Inventory
         run: |
           mkdir -p ./ansible
