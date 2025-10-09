@@ -1,42 +1,25 @@
 ---
-- name: Upgrade Python to compatible version
+- name: Setup Python environment on VM
   hosts: server
   become: yes
-  vars:
-    python_bin: /usr/bin/python3.10
   tasks:
-
-    # Step 1: تثبيت Python حديث باستخدام raw (لا يحتاج Python موجود)
-    - name: Install Python 3.10 using raw module
-      raw: |
-        apt update -y
-        apt install -y software-properties-common wget build-essential
-        add-apt-repository ppa:deadsnakes/ppa -y
-        apt update -y
-        apt install -y python3.10 python3.10-minimal python3.10-venv python3.10-distutils python3.10-dev
-      register: python_install
-      changed_when: "'installed' in python_install.stdout or 'Setting up' in python_install.stdout"
-
-    # Step 2: اجعل Ansible يستخدم Python الجديد
-    - name: Set python interpreter to Python 3.10
-      set_fact:
-        ansible_python_interpreter: "{{ python_bin }}"
-
-    # Step 3: جمع الـ facts بعد تثبيت Python حديث
     - name: Gather facts
       ansible.builtin.setup:
 
-    # Step 4: تأكد من أن python3 يشير إلى Python 3.10
-    - name: Ensure python3 points to python3.10
-      ansible.builtin.command: update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
-      args:
-        creates: /usr/bin/python3
+    - name: Ensure Python 3.10 packages installed
+      ansible.builtin.apt:
+        name:
+          - python3.10
+          - python3.10-venv
+          - python3.10-distutils
+          - python3.10-dev
+        state: present
+        install_recommends: yes
 
-    # Step 5: Verify Python version
-    - name: Show installed Python version
+    - name: Verify Python version
       ansible.builtin.command: python3 --version
       register: python_version
 
-    - name: Display Python version
+    - name: Show installed Python version
       ansible.builtin.debug:
         msg: "Installed Python version is {{ python_version.stdout }}"
