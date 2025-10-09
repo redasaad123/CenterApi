@@ -56,11 +56,19 @@ jobs:
           echo "❌ SSH connection timeout"
           exit 1
 
-      - name: Ensure Python 3 is available on remote (Ubuntu 24.04)
+      - name: Ensure Python 3.12 is installed on remote
         run: |
-            sudo apt-get update -y &&
-            sudo apt-get install -y python3 python3-venv python3-pip &&
-            sudo ln -sf /usr/bin/python3 /usr/bin/python
+          echo "📦 Ensuring Python 3.12 on remote server..."
+          ssh -o StrictHostKeyChecking=no adminuser@${{ steps.get_ip.outputs.public_ip }} '
+            set -e
+            if ! command -v python3.12 >/dev/null 2>&1; then
+              sudo apt-get update -y &&
+              sudo apt-get install -y python3 python3-pip python3-venv
+            fi
+            sudo ln -sf /usr/bin/python3.12 /usr/bin/python3
+            python3 --version
+          '
+
           
 
 
