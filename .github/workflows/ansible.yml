@@ -58,10 +58,11 @@ jobs:
 
       - name: Ensure Python is installed
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3
+          sudo apt-get update -y &&
+          sudo apt-get install -y python3.9 &&
+          sudo ln -sf /usr/bin/python3.9 /usr/bin/python3
 
-          
+
       - name: Create Ansible Inventory
         run: |
           mkdir -p ./ansible
