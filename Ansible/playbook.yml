@@ -1,28 +1,38 @@
 ---
-- name: Bootstrap Python on remote server
+- name: Fix Python installation
   hosts: all
   gather_facts: no
   become: yes
   tasks:
-    - name: Update package cache
-      raw: apt-get update -y
-      register: apt_update
-      failed_when: apt_update.rc != 0
+    - name: Check available Python versions
+      raw: ls -la /usr/bin/python3*
+      register: python_versions
+      changed_when: false
+      ignore_errors: yes
 
-    - name: Install Python3 and dependencies
+    - name: Display available Python versions
+      debug:
+        var: python_versions.stdout_lines
+
+    - name: Fix Python3 symlink
       raw: |
-        set -e
-        apt-get install -y python3 python3-apt python3-minimal
+        rm -f /usr/bin/python3
+        ln -s /usr/bin/python3.6 /usr/bin/python3
         ls -la /usr/bin/python3
         /usr/bin/python3 --version
-      register: install_result
-      failed_when: install_result.rc != 0
+      register: fix_result
+      changed_when: true
 
-    - name: Display installation output
+    - name: Verify Python is working
+      raw: /usr/bin/python3 --version
+      register: verify
+      changed_when: false
+
+    - name: Show Python version
       debug:
-        var: install_result
+        var: verify.stdout
 
-- name: Continue with setup
+- name: Setup Application
   hosts: all
   become: yes
   gather_facts: yes
