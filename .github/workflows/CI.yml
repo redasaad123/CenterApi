@@ -32,7 +32,7 @@ jobs:
       
       # Build Docker image
       - name: Build Docker image
-        run: docker build -t centerapi-image CenterApi/dockerfile
+        run: docker build -t centerapi-image -f CenterApi/dockerfile CenterApi
 
       # Push Docker image to Docker Hub (optional)
       - name: Log in to Docker Hub
