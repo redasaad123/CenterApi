@@ -12,6 +12,10 @@
 # - name: Install Docker on VM
 #   import_tasks: templatesTasks/Docker.yml
 
-# setup nginx
-- name: Setup Nginx on VM
-  import_tasks: templatesTasks/nginx-confg.yml
+# # setup nginx
+# - name: Setup Nginx on VM
+#   import_tasks: templatesTasks/nginx-confg.yml
+
+# deploy the container
+- name: Deploy the Docker container
+  import_tasks: templatesTasks/containers.yml

@@ -5,3 +5,12 @@
 # nginx_var
 server_domain_or_IP: "158.158.105.46"
 app_port: 9090
+
+
+# docker_var
+
+item.name: redasaad123/centerapi-image
+item.tag: latest
+
+
+app_container_name: centerapi-container
