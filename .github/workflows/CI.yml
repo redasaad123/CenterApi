@@ -23,16 +23,16 @@ jobs:
 
       # Restore dependencies
       - name: Restore
-        run: dotnet restore CenterApi.sln
+        run: dotnet restore CenterApi/CenterApi.sln
 
       # Build
       - name: Build
-        run: dotnet build CenterApi.sln --configuration Release --no-restore
+        run: dotnet build CenterApi/CenterApi.sln --configuration Release --no-restore
 
       
       # Build Docker image
       - name: Build Docker image
-        run: docker build -t centerapi-image .
+        run: docker build -t centerapi-image CenterApi/dockerfile
 
       # Push Docker image to Docker Hub (optional)
       - name: Log in to Docker Hub
