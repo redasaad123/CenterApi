@@ -1,4 +1,4 @@
-name: 2 - Ansible Configuration
+name: Ansible Configuration
 
 on:
   repository_dispatch:
