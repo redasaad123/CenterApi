@@ -2,9 +2,9 @@
 
 - name: pull the Docker image
   ansible.builtin.docker_image:
-    name: "{{ item.name }}"
+    name: "{{ image-name }}"
     source: pull
-    tag: "{{ item.tag }}"
+    tag: "{{ image-tag }}"
   
 
 - name: Stop and remove existing container if running
@@ -17,7 +17,7 @@
 - name: Run the Docker container
   ansible.builtin.docker_container:
     name: "{{ app_container_name }}"
-    image: "{{ item.name }}:{{ item.tag }}"
+    image: "{{ image-name }}:{{ image-tag }}"
     state: started
     restart_policy: always
     ports:
