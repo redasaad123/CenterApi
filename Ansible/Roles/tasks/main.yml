@@ -10,4 +10,4 @@
 
 # install Docker 
 - name: Install Docker on VM
-  import_tasks: templatesTasks/install-Docker.yml
+  import_tasks: templatesTasks/Docker.yml
