@@ -4,7 +4,7 @@ server {
 
     # لو عندك ملفات ثابتة (اختياري)
     location /static/ {
-        root /var/www/{{ app_name }};
+        root /var/www/{{ app_container_name }};
     }
 
     # تحويل الطلبات إلى التطبيق داخل الـ container
