@@ -68,23 +68,23 @@ jobs:
       # Validate Terraform configuration
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./Terraform
+        working-directory: ./DevOps/Terraform
 
       # Plan Terraform deployment
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./Terraform
+        working-directory: ./DevOps/Terraform
 
       # Apply Terraform deployment
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master'
         run: terraform apply -auto-approve tfplan
-        working-directory: ./Terraform
+        working-directory: ./DevOps/Terraform
 
       # Get Public IP - الخطوة المصلحة
       - name: Get Public IP
         id: get_ip
-        working-directory: ./Terraform
+        working-directory: ./DevOps/Terraform
         run: |
           echo "📋 Checking available outputs..."
           terraform output
