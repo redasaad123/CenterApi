@@ -23,11 +23,17 @@
     state: present
   become: yes
 
+- name: Set Ubuntu codename
+  command: lsb_release -cs
+  register: ubuntu_codename
+  changed_when: false
+
 - name: Add Docker repository
-  ansible.builtin.apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ubuntu_codename.stdout }} stable"
     state: present
   become: yes
+
 
 - name: Install Docker
   ansible.builtin.apt:
