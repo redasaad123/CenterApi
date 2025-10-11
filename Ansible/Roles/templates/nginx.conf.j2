@@ -2,11 +2,14 @@ server {
     listen 80;
     server_name {{ server_domain_or_IP }};
 
-     # Optional: serve static files
-    location /static/ {
-        root /var/www/yourapp;
-    }
+    # Logging
+    access_log /var/log/nginx/{{ app_name }}_access.log;
+    error_log /var/log/nginx/{{ app_name }}_error.log;
 
+    # Optional: serve static files
+    location /static/ {
+        root /var/www/{{ app_name }};
+    }
 
     location / {
         proxy_pass http://127.0.0.1:{{ app_port }};
@@ -16,7 +19,4 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
-
-   
-   
 }

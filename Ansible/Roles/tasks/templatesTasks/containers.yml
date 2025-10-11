@@ -5,6 +5,8 @@
     name: "{{ image_name }}"
     source: pull
     tag: "{{ image_tag }}"
+
+  become: yes
   
 
 - name: Stop and remove existing container if running
