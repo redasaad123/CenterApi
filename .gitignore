@@ -20,7 +20,7 @@
 # Ignore specific workflow files
 .github/workflows/CD.yml
 .github/workflows/master_center-api.yml
-.github/workflows/CI-CD-ForDocker.yml
+
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
