@@ -9,14 +9,14 @@
 
 - name: Stop and remove existing container if running
   ansible.builtin.docker_container:
-    name: {{ app_container_name }}
+    name: "{{ app_container_name }}"
     state: absent
     force_kill: yes
   ignore_errors: yes
 
 - name: Run the Docker container
   ansible.builtin.docker_container:
-    name: {{ app_container_name }}
+    name: "{{ app_container_name }}"
     image: "{{ item.name }}:{{ item.tag }}"
     state: started
     restart_policy: always
