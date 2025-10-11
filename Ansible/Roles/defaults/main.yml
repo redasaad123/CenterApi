@@ -9,8 +9,8 @@ app_port: 9090
 
 # docker_var
 
-image-name: redasaad123/centerapi-image
-image-tag: latest
+image_name: redasaad123/centerapi-image
+image_tag: latest
 
 
 app_container_name: centerapi-container
