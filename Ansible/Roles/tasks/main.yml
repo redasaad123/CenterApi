@@ -14,4 +14,4 @@
 
 # setup nginx
 - name: Setup Nginx on VM
-  import_tasks: templatesTasks/nginx-setup.yml
+  import_tasks: templatesTasks/nginx-config.yml
